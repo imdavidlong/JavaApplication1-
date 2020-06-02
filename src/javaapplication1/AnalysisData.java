@@ -1,0 +1,379 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package javaapplication1;
+
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author LONG
+ */
+public class AnalysisData extends javax.swing.JFrame {
+
+    /**
+     * Creates new form AnalysisData
+     */
+    public AnalysisData() {
+        initComponents();
+        showup();
+        QurryDataLabel.setText("select cid,sum(price) as sum,count(*) as count from buytic b, buy_ticket_name bt where b.event_name=bt.Event_name\n" +
+"group by cid\n" +
+"order by count(*) desc;");
+        
+        
+        String[] countList = getListFromSQL("count(*)");
+        int maxcount=0;
+        for(int i =0;i<countList.length;i++){
+            if(Integer.parseInt(countList[i])>maxcount)
+                maxcount=Integer.parseInt(countList[i]);
+        }
+        
+        String[] sumList = getListFromSQL("sum(price)");
+        int maxsum=0;
+        for(int i =0;i<sumList.length;i++){
+            if(Integer.parseInt(sumList[i])>maxsum)
+                maxsum=Integer.parseInt(sumList[i]);
+        }
+        
+        String[] cidList = getListFromSQL("cid");
+        
+        
+        
+//        String topbuyer=showup1(String.valueOf(maxcount))[0];
+//        String topsum=showup1(String.valueOf(maxcount))[1];
+        NumberOfTicketLabel.setText(String.valueOf(maxcount));
+        TotalCostLabel.setText(String.valueOf(maxsum));
+        topbuyerLabel.setText(cidList[0]);
+//        TotalCostLabel.setText(topsum);
+//        topbuyerLabel.setText(topbuyer);
+        
+        
+    }
+    
+   
+    
+    public void showup(){
+    
+        try{    
+                
+                
+               connection c = connection.getInstance();
+               Statement stmt = connection.conn.createStatement();
+               
+               ResultSet rs = stmt.executeQuery("select cid,sum(price) as sum,count(*) as count from buytic b, buy_ticket_name bt where b.event_name=bt.Event_name\n" +
+"group by cid\n" +
+"order by count(*) desc;");
+               DefaultTableModel tm=(DefaultTableModel) table.getModel();
+               tm.setRowCount(0);
+
+               
+        while (rs.next()){
+            Object o[]={rs.getString(1),rs.getString(2),rs.getString(3)};
+           
+            
+            tm.addRow(o);
+    
+            }
+           }
+           catch (Exception e){
+           JOptionPane.showMessageDialog(this,e);
+                   }
+    }
+//    public String[] showup1(String a){
+//        
+//        try{    
+//                
+//               
+//               connection c = connection.getInstance();
+//               Statement stmt = connection.conn.createStatement();
+//               
+//               ResultSet rs = stmt.executeQuery("select cid,sum(price) as sum,count(*) as count from buytic b, buy_ticket_name bt where b.event_name=bt.Event_name\n" +
+//"group by cid\n" +
+//"order by count(*) desc;");
+////               DefaultTableModel tm=(DefaultTableModel) table.getModel();
+////               tm.setRowCount(0);
+//
+//               
+//        while (rs.next()){
+//            Object o[]={rs.getString(1),rs.getString(2),rs.getString(3)};
+//           
+//            if(a==rs.getString(3)){
+//                String[] result = new String[]{rs.getString(1),s.getString(2)};
+////                result[0].add(rs.getString(1));
+////                result[1].add(rs.getString(2));
+//            }
+////            
+////            tm.addRow(o);
+//    
+//            }
+//           }
+//           catch (Exception e){
+//           JOptionPane.showMessageDialog(this,e);
+//                   }
+//        String[] result;
+//        
+//        return result;
+//    }
+//    
+     public String[] getListFromSQL(String what){
+        
+        
+        ArrayList<String> list = new ArrayList<String>();
+        try{    
+               
+               connection c = connection.getInstance();
+               Statement stmt = connection.conn.createStatement();
+               
+               ResultSet rs = stmt.executeQuery("select "+ what +" from buytic b, buy_ticket_name bt where b.event_name=bt.Event_name\n" +
+"group by cid\n" +
+"order by count(*) desc;");
+               
+        while (rs.next()){
+                list.add(rs.getString(what));
+            }
+           }
+           catch (Exception e){
+           JOptionPane.showMessageDialog(this,e);
+                   }
+        
+        String[] str = list.toArray(new String[list.size()]);
+        return str;
+    }
+
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jScrollPane1 = new javax.swing.JScrollPane();
+        table = new javax.swing.JTable();
+        QurryLabel = new javax.swing.JLabel();
+        QurryDataLabel = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        topbuyerLabel = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        NumberOfTicketLabel = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        TotalCostLabel = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        table.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "CID", "SUM", "COUNT"
+            }
+        ));
+        jScrollPane1.setViewportView(table);
+
+        QurryLabel.setText("Qurry:");
+
+        QurryDataLabel.setText("jLabel1");
+
+        jLabel1.setText("Top buyer:");
+
+        topbuyerLabel.setText("jLabel2");
+
+        jLabel2.setText("Number of tic:");
+
+        NumberOfTicketLabel.setText("jLabel3");
+
+        jLabel3.setText("Total cost:");
+
+        TotalCostLabel.setText("jLabel4");
+
+        jButton1.setText("desc order");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("incr order");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(QurryLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(QurryDataLabel))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 361, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(18, 18, 18)
+                                .addComponent(topbuyerLabel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(NumberOfTicketLabel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(TotalCostLabel))
+                            .addComponent(jButton1)
+                            .addComponent(jButton2))))
+                .addContainerGap(199, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(QurryLabel)
+                    .addComponent(QurryDataLabel))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 357, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(22, 22, 22))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(topbuyerLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(NumberOfTicketLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(TotalCostLabel))
+                        .addGap(46, 46, 46)
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        
+        showup();
+        QurryDataLabel.setText("select cid,sum(price) as sum,count(*) as count from buytic b, buy_ticket_name bt where b.event_name=bt.Event_name\n" +
+"group by cid\n" +
+"order by count(*) desc;");
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        QurryDataLabel.setText("select cid,sum(price) as sum,count(*) as count from buytic b, buy_ticket_name bt where b.event_name=bt.Event_name\n" +
+"group by cid\n" +
+"order by count(*);");
+        
+        
+        try{    
+                
+                
+               connection c = connection.getInstance();
+               Statement stmt = connection.conn.createStatement();
+               
+               ResultSet rs = stmt.executeQuery("select cid,sum(price) as sum,count(*) as count from buytic b, buy_ticket_name bt where b.event_name=bt.Event_name\n" +
+"group by cid\n" +
+"order by count(*);");
+               DefaultTableModel tm=(DefaultTableModel) table.getModel();
+               tm.setRowCount(0);
+
+               
+        while (rs.next()){
+            Object o[]={rs.getString(1),rs.getString(2),rs.getString(3)};
+            
+            tm.addRow(o);
+    
+            }
+           }
+           catch (Exception e){
+           JOptionPane.showMessageDialog(this,e);
+                   }
+        
+        
+        
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(AnalysisData.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(AnalysisData.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(AnalysisData.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(AnalysisData.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new AnalysisData().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel NumberOfTicketLabel;
+    private javax.swing.JLabel QurryDataLabel;
+    private javax.swing.JLabel QurryLabel;
+    private javax.swing.JLabel TotalCostLabel;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable table;
+    private javax.swing.JLabel topbuyerLabel;
+    // End of variables declaration//GEN-END:variables
+}
